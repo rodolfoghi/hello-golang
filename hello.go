@@ -1,8 +1,14 @@
 package main
 
-import "fmt"
-import "os"
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"time"
+)
+
+const monitoramentos = 3
+const delay = 5
 
 func main() {
 	exibeIntroducao()
@@ -42,13 +48,25 @@ func leComando() int {
 	var comandoLido int
 	fmt.Scanf("%d", &comandoLido)
 	fmt.Println("O comando escolhido foi", comandoLido)
+	fmt.Println("")
 
 	return comandoLido
 }
 
 func inicarMonitoramento() {
 	fmt.Println("Monitorando...")
-	site := "https://github.com"
+	sites := []string{"https://github.com", "https://minecraft.net/pt-br/", "https://code.visualstudio.com/", "https://www.mozilla.org/pt-BR/firefox/new/", "http://random-status-code.herokuapp.com/"}
+
+	for i := 0; i < monitoramentos; i++ {
+		for _, site := range sites {
+			monitoraSite(site)
+		}
+		time.Sleep(delay * time.Second)
+		fmt.Println("")
+	}
+}
+
+func monitoraSite(site string) {
 	res, _ := http.Get(site)
 
 	if res.StatusCode == 200 {
